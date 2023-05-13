@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { loadUsers, loadUsersSuccess } from '../actions';
-import { map, mergeMap, tap } from 'rxjs';
+import { loadUsers, loadUsersError, loadUsersSuccess } from '../actions';
+import { catchError, map, mergeMap, of, tap } from 'rxjs';
 import { UserService } from 'src/app/services/user.service';
 
 @Injectable()
@@ -15,7 +15,8 @@ export class UsersEffects {
       mergeMap(() =>
         this.userService.getUsers().pipe(
           // tap((data) => console.log('getUsers Effect: ', data))
-          map((users) => loadUsersSuccess({ users }))
+          map((users) => loadUsersSuccess({ users })),
+          catchError((error) => of(loadUsersError({ payload: error })))
         )
       )
     )
