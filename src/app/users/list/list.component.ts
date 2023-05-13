@@ -16,6 +16,10 @@ export class ListComponent implements OnInit {
   constructor(private store: Store<AppState>) {}
 
   ngOnInit(): void {
+    this.store.select('users').subscribe(({ users }) => {
+      this.users = users;
+    });
+
     this.store.dispatch(loadUsers());
     // this.userService.getUsers().subscribe((users) => (this.users = users));
   }
